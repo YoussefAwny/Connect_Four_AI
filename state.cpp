@@ -3,10 +3,6 @@
 State::State()
 {
 	
-	board = new piece*[BOARD_ROWS];
-	for(int i = 0; i < BOARD_ROWS; ++i)
-		board[i] = new piece[BOARD_COLS];
-		
 	
     for ( int i=0; i< BOARD_ROWS ; i++)
     {
@@ -20,39 +16,51 @@ State::State()
 
 State::State(const State& x)
 {
-    this->board = x.board;
+
+	for (int i = 0 ; i< BOARD_ROWS ;i++)
+	{
+		for (int j = 0 ; j<BOARD_COLS ; j++)
+		{
+			this->board[i][j] = x.board[i][j];
+		}
+	}
+    
 
 }
 
 State::State(const State &x, game_move &p)
 {
-    this->board = x.board;
+    for (int i = 0 ; i< BOARD_ROWS ;i++)
+	{
+		for (int j = 0 ; j<BOARD_COLS ; j++)
+		{
+			this->board[i][j] = x.board[i][j];
+		}
+	}
     this->board[p.row][p.col] = p._piece;
 }
-State* State::make_move(piece &pc, uint8_t col)//ezay ast5dem el copy constructor gwa el fn????
+State State::make_move(piece &pc, uint8_t col)//ezay ast5dem el copy constructor gwa el fn????
 {
-	State *s;
-    last_move.col =col;
-    last_move._piece = pc;
+	State result= *(this);
+    result.last_move.col =col-1;
+    result.last_move._piece = pc;
 
-    for(int i=0; i<BOARD_ROWS; i++)
+    for(int i=BOARD_ROWS-1; i>=0; i--)
     {
-        if ( board[i][col] == piece::empty)
+        if ( result.board[i][col-1] == piece::empty)
         {
-            last_move.row = i;
-            board[i][col] = last_move._piece;
+            result.last_move.row = i;
+            result.board[i][col-1] = result.last_move._piece;
+			break;
         }
     }
 
-	return s;
+	
+	return result;
 }
 
 
 State :: ~State()
 {
-	for(int i = 0; i < BOARD_ROWS; ++i) {
-			delete[] board[i];   
-		}
-		
-		delete[] board;
+	
 }

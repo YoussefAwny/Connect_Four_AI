@@ -10,7 +10,7 @@
 class State
 {
 	public:
-    piece **board;
+		piece board[BOARD_ROWS] [BOARD_COLS];
 
 	private: 
     game_move last_move;
@@ -22,7 +22,7 @@ public:
     State(const State &x, game_move &p);
     ~State();
     piece utility();
-    State* make_move(piece &pc, uint8_t col);
+    State make_move(piece &pc, uint8_t col);
     bool isfull()
     {
         return num_empty_cells==0;
