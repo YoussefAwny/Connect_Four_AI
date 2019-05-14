@@ -1,5 +1,20 @@
+#include <iostream>
+#include "state.h"
+using namespace std;
 
-int main(int argc, char *argv[])
+#define rows	6
+#define cols	7
+
+int main ()
 {
-    return 0;
+	char c;
+	cout<<"if you want to play first type f and type any other key to play second: ";
+
+	cin>>c;
+
+	if(c=='f')
+	{
+		State S;
+		
+	}
 }

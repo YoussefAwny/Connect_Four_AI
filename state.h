@@ -9,8 +9,10 @@
 
 class State
 {
-private:
+	public:
     piece board[BOARD_ROWS][BOARD_COLS];
+
+	private: 
     game_move last_move;
     uint8_t num_empty_cells;
 
