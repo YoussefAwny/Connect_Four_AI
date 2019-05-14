@@ -11,5 +11,11 @@ struct pos {
 	}
 };
 
+struct game_move {
+    uint8_t col;
+    uint8_t row;
+    piece _piece;
+};
 
-enum piece { us = 1, them = -1, empty = 0};
+
+typedef enum piece { us = 1, them = -1, empty = 0}piece ;
