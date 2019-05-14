@@ -1,4 +1,4 @@
-#include <stdint,h>
+#include <cstdint>
 
 struct pos {
 	uint8_t x;
@@ -12,4 +12,4 @@ struct pos {
 };
 
 
-enum player { us = 1, them = -1, empty = 0};
+enum piece { us = 1, them = -1, empty = 0};
