@@ -39,7 +39,7 @@ State::State(const State &x, game_move &p)
 	}
     this->board[p.row][p.col] = p._piece;
 }
-State State::make_move(piece &pc, uint8_t col) const//ezay ast5dem el copy constructor gwa el fn????
+State State::make_move(piece pc, uint8_t col) const//ezay ast5dem el copy constructor gwa el fn????
 {
     //todo: update num empty cells in the new returned state
 	State result= *(this);
