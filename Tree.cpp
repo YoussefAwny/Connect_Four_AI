@@ -49,23 +49,23 @@ int main ()
 	treeNode* l5 = new treeNode (5);
 	treeNode* l6 = new treeNode (8);
 
-	vector <treeNode*> end1;
-	end1.push_back(l1);
-	end1.push_back(l2);
-	end1.push_back(l3);
+	vector <treeNode*> *end1 = new vector <treeNode*>();
+	(*end1).push_back(l1);
+	(*end1).push_back(l2);
+	(*end1).push_back(l3);
 
-	vector <treeNode*> end2 ;
-	end2.push_back(l4);
-	end2.push_back(l5);
-	end2.push_back(l6);
+	vector <treeNode*> *end2 = new vector <treeNode*>();
+	(*end2).push_back(l4);
+	(*end2).push_back(l5);
+	(*end2).push_back(l6);
 
-	treeNode* middle1 = new treeNode (4,&end1);
-	treeNode* middle2 = new treeNode (12,&end2);
-	vector <treeNode*> middle;
-	middle.push_back(middle1);
-	middle.push_back(middle2);
+	treeNode* middle1 = new treeNode (4,end1);
+	treeNode* middle2 = new treeNode (12,end2);
+	vector <treeNode*> *middle = new vector <treeNode*>();
+	(*middle).push_back(middle1);
+	(*middle).push_back(middle2);
 
-	treeNode* root = new treeNode(14, &middle);
+	treeNode* root = new treeNode(14, middle);
 	
 	dfs(root);
 }
