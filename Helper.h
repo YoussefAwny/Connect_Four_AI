@@ -1,8 +1,14 @@
-#include <stdint>
+#include <stdint,h>
 
 struct pos {
 	uint8_t x;
 	uint8_t y;
+
+	pos(uint8_t x, uint8_t y)
+	{
+		this->x = x;
+		this->y = y;
+	}
 };
 
 
