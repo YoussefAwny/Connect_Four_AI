@@ -2,8 +2,7 @@
 #include "state.h"
 using namespace std;
 
-#define rows	6
-#define cols	7
+
 
 int main ()
 {
@@ -14,7 +13,8 @@ int main ()
 
 	if(c=='f')
 	{
-		State S;
+		State s ;
+
 		
 	}
 }

@@ -10,7 +10,7 @@
 class State
 {
 	public:
-    piece board[BOARD_ROWS][BOARD_COLS];
+    piece **board;
 
 	private: 
     game_move last_move;
@@ -19,7 +19,7 @@ class State
 public:
     State();
     State(const State &x);
-    State::State(const State &x, game_move &p);
+    State(const State &x, game_move &p);
     ~State();
     piece utility();
     State* make_move(piece &pc, uint8_t col);
