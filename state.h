@@ -9,25 +9,22 @@
 
 class State
 {
-	public:
-		piece board[BOARD_ROWS] [BOARD_COLS];
-
-	private: 
-    game_move last_move;
+private:
     uint8_t num_empty_cells;
 
 public:
+    piece board[BOARD_ROWS] [BOARD_COLS];
+    game_move last_move; //todo: change to getter method?
     State();
     State(const State &x);
     State(const State &x, game_move &p);
     ~State();
-    piece utility();
-    State make_move(piece &pc, uint8_t col);
-    bool isfull()
+    piece utility() const;
+    State make_move(const piece pc, uint8_t col) const;
+    bool is_full() const
     {
         return num_empty_cells==0;
     }
-
 };
 
 #endif // STATE_H
