@@ -30,7 +30,8 @@ State alpha_beta_search(const State& state) {
         of the children that has the max value
     */
     State max_state(state); //initialize with the current state
-    piece p = max_value(state, neg_inf, pos_inf, &max_state);
+	//don't use the return value, just get max_state
+    max_value(state, neg_inf, pos_inf, &max_state);
     return max_state;
 }
 
@@ -79,7 +80,8 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
                 // note that there might be multiple states with the
                 // same max_util value, this way we will just choose
                 // the last state of the children that has max_util
-                max_state->board[child_ptr->last_move.col][child_ptr->last_move.row];
+                max_state->board[child_ptr->last_move.col][child_ptr->last_move.row] = 
+					child_ptr->last_move._piece;
             }
             if (max_util > beta) {
                 break;
