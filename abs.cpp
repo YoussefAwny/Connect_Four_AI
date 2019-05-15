@@ -2,12 +2,18 @@
 #include "state.h"
 #include <vector>
 
-void getChildren(const State& state, std::vector<State>& children) {
-    State s(state);
+void getChildren(const State& state, std::vector<State*>& children) {
+	/*
+		NOTE: it's the responsibility of the caller to manually delete
+		each State in children
+	*/
 	piece new_piece = state.last_move._piece == piece::us ? piece::them : piece::us;
     for (uint8_t i=0; i<BOARD_COLS; ++i) {
-        if (state.make_move(new_piece, i, &s)) {
+		State* s = new State();
+        if (state.make_move(new_piece, i, s)) {
             children.push_back(s);
+		} else {
+			delete s;
 		}
 	}
     return;
@@ -57,11 +63,12 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
         // children to this state
         // initialize the vector with the max possible capacity
         // to improve performance when pushing new states
-        std::vector<State> children(BOARD_COLS);
+        std::vector<State*> children(BOARD_COLS);
         int max_util = neg_inf;
         getChildren(state, children);
         for (auto it = children.begin(); it != children.end(); ++it) {
-            piece child_value = min_value(*it, alpha, beta);
+			auto child_ptr = *it;
+            piece child_value = min_value(*child_ptr, alpha, beta);
             max_util = max_util > child_value ? max_util : child_value;
             // cutoff - stop looking in the other children if max_util
             // is already out of acceptable range [alpha, beta]
@@ -71,13 +78,17 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
                 // note that there might be multiple states with the
                 // same max_util value, this way we will just choose
                 // the last state of the children that has max_util
-                max_state->board[it->last_move.col][it->last_move.row];
+                max_state->board[child_ptr->last_move.col][child_ptr->last_move.row];
             }
             if (max_util > beta) {
-                return (piece) max_util;
+                break;
             }
             alpha = max_util > alpha ? max_util : alpha;
         }
+		//delete all children
+		for (auto it = children.begin(); it != children.end(); ++it) {
+			delete *it;
+		}
         return (piece) max_util;
     }
 }
@@ -96,19 +107,24 @@ piece min_value(const State& state, int alpha, int beta) {
         // children to this state
         // initialize the vector with the max possible capacity
         // to improve performance when pushing new states
-        std::vector<State> children(BOARD_COLS);
+        std::vector<State*> children(BOARD_COLS);
         int min_util = pos_inf;
         getChildren(state, children);
         for (auto it = children.begin(); it != children.end(); ++it) {
-            piece child_value = max_value(*it, alpha, beta, nullptr);
+			auto child_ptr = *it;
+            piece child_value = max_value(*child_ptr, alpha, beta, nullptr);
             min_util = min_util < child_value ? min_util : child_value;
             // cutoff - stop looking in the other children if min_util
             // is already out of acceptable range [alpha, beta]
             if (min_util < alpha) {
-                return (piece) min_util;
+				break;
             }
             beta = min_util < beta ? min_util : beta;
         }
+		//delete all children
+		for (auto it = children.begin(); it != children.end(); ++it) {
+			delete *it;
+		}
         return (piece) min_util;
     }
 }
