@@ -19,6 +19,11 @@ OBJ=$(patsubst %.cpp,$(OBJ_DIR)/%.o,$(SRC))
 
 all: make_dirs $(EXE_PATH)
 
+# you will have to use "make clean" after "make debug"
+# if you want to force rebuild without -g flag
+debug: CFLAGS +=-g
+debug: make_dirs $(EXE_PATH)
+
 make_dirs: | $(BUILD_DIR) $(OBJ_DIR)
 
 $(BUILD_DIR):

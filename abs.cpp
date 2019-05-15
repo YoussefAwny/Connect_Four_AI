@@ -9,7 +9,7 @@ void getChildren(const State& state, std::vector<State*>& children) {
 	*/
 	piece new_piece = state.last_move._piece == piece::us ? piece::them : piece::us;
     for (uint8_t i=0; i<BOARD_COLS; ++i) {
-		State* s = new State();
+		State* s = new State(state);
         if (state.make_move(new_piece, i, s)) {
             children.push_back(s);
 		} else {
