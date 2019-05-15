@@ -11,6 +11,11 @@ State::State()
         }
     }
 
+    num_empty_cells = BOARD_COLS * BOARD_ROWS;
+    last_move._piece = empty;
+    last_move.col = -1;
+    last_move.row = -1;
+
 }
 
 State::State(const State& x)
