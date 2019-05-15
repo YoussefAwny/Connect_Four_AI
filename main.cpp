@@ -89,7 +89,9 @@ int main ()
 
 		draw= false;
 		
-		//print_board( alpha_beta_search(*(s)));		//Make the computer move
+		*(s) = alpha_beta_search(*(s));		//Make the computer move
+		
+		print_board(*(s));
 		
 		//print_board (next);
 		
@@ -97,8 +99,8 @@ int main ()
 
 		//for testing
 		
-		s = abs (s);
-		print_board(*(s));
+	//	s = abs (s);
+		
 
 		
 		if ((*(s)).utility()==(piece) us)
