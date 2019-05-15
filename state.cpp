@@ -66,12 +66,14 @@ piece State::utility() const{
 	int count = 0;
 	int play = last_move._piece;
 	//Horizontal test 
-	for (int i = 0; i < 7; i++)
+	for (int i = 0; i < BOARD_COLS; i++)
 	{
 		if (play == board[i][last_move.col])
 		{
 			count++;
 		}
+		else
+			count = 0;
 
 		if (count >= 4)
 			return play;
@@ -79,15 +81,51 @@ piece State::utility() const{
 
 	//vertical test
 	count = 0;
-	for (int i = 0; i < 6; i++)
+	for (int i = 0; i < BOARD_ROWS; i++)
 	{
 		if (play == board[last_move.row][i])
 		{
 			count++;
 		}
+		else
+		{
+			count = 0;
+		}
 
 		if (count >= 4)
 			return play;
+	}
+
+	//check lower upward diagonal  
+	if (last_move.row > last_move.col) {
+		count = 0;
+		int j = 0;
+		for (int i = last_move.row - last_move.col; i < BOARD_ROWS && j < BOARD_COLS; i++) {
+			if (board[i][j] == play) {
+				count++;
+				if (count >= 4)
+					return play;
+			}
+			else
+				count = 0;
+			j++;
+		}
+	}
+
+	//check upper upward diagonal
+	else {
+		count = 0;
+		int i = 0;
+		for (int j = last_move.col - last_move.row ; i < BOARD_ROWS && j < BOARD_COLS; j++) {
+			if (board[i][j] == play) {
+				count++;
+				if (count >= 4)
+					return play;
+			}
+			else
+				count = 0;
+			i++;
+		}
 	}
 }
 
