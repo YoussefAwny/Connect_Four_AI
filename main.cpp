@@ -18,7 +18,12 @@ void print_board (State s)
 			}
 			cout<<endl;
 		}
+
+	cout<<endl<<endl;
 }
+
+
+
 
 int main ()
 {
@@ -29,13 +34,13 @@ int main ()
 	cout<<"if you want to play first type f and type any other key to play second: ";
 	cin>>c;
 
-	State s ;	//State to Start with
+	State *s = new State() ;	//State to Start with
 
 
 	//in case the human starts
 	if(c=='f')
 	{
-		print_board (s);
+		print_board (*(s));
 
 		int col;
 		cout<<"Enter Col number you want to insert in : ";
@@ -54,19 +59,40 @@ int main ()
 		
 
 		//Make the move the human entered
-		State next=s.make_move(player,col);
-		print_board(next);
+		bool check=(*(s)).make_move(player,col, s);
+
+		//Check if row is full
+		if (check)
+		{
+			print_board(*(s));
+		}
 		
+		else 
+		{
+			cout<<endl;
+			cout<<"Full Col";
+			cout<<endl<<endl<<endl;
+		}
+
+	
+
 
 		
 	}
 
 	
-	while  (!s.isfull)
+	while  (!(*(s)).is_full())
 	{
 
-		State next = abs(s);		//Make the computer move
-		print_board(next);
+		State* next = abs(s);		//Make the computer move
+		print_board(*(next));
+		
+		if ((*(s)).utility()==1)
+		{
+			cout<<endl;
+			cout<< "You Lost";
+			break;
+		}
 
 		int col;
 		cout<<"Enter Col number you want to insert in : ";
@@ -84,8 +110,29 @@ int main ()
 
 
 		//Make the move human asked for
-		State after_next=s.make_move(player,col);
-		print_board(after_next);
+		//Make the move the human entered
+		bool check=(*(next)).make_move(player,col, next);
+
+		//Check if row is full
+		if (check)
+		{
+			print_board(*(next));
+		}
+		
+		else 
+		{
+			cout<<endl;
+			cout<<"Full Col";
+			cout<<endl<<endl<<endl;
+		}
+
+		if ((*(s)).utility()==-1)
+		{
+			cout<<endl;
+			cout<< "You Won";
+			break;
+		}
+
 	}
 
 

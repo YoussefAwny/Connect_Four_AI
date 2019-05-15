@@ -1,5 +1,4 @@
 #include "state.h"
-
 State::State()
 {
 	
@@ -39,29 +38,37 @@ State::State(const State &x, game_move &p)
 	}
     this->board[p.row][p.col] = p._piece;
 }
-State State::make_move(piece pc, uint8_t col) const//ezay ast5dem el copy constructor gwa el fn????
+bool State::make_move(piece pc, uint8_t col, State* s) const//ezay ast5dem el copy constructor gwa el fn????
 {
     //todo: update num empty cells in the new returned state
-	State result= *(this);
-    result.last_move.col =col-1;
-    result.last_move._piece = pc;
+	
+	bool ret = false;
+    (*(s)).last_move.col =col-1;
+    (*(s)).last_move._piece = pc;
 
     for(int i=BOARD_ROWS-1; i>=0; i--)
     {
-        if ( result.board[i][col-1] == piece::empty)
+        if ( (*(s)).board[i][col-1] == piece::empty)
         {
-            result.last_move.row = i;
-            result.board[i][col-1] = result.last_move._piece;
+            (*(s)).last_move.row = i;
+            (*(s)).board[i][col-1] = (*(s)).last_move._piece;
+			(*(s)).num_empty_cells--;
+			ret=true;
 			break;
         }
     }
 
-	
-	return result;
+
+	return ret;
 }
 
 piece State::utility() const{
     //todo: implement
+
+	/*for testing*/
+	piece won=empty;
+	return won;
+	/*for testing*/
 }
 
 State::~State()

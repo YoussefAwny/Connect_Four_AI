@@ -20,7 +20,7 @@ public:
     State(const State &x, game_move &p);
     ~State();
     piece utility() const;
-    State make_move(const piece pc, uint8_t col) const;
+    bool make_move(const piece pc, uint8_t col, State* s) const;
     bool is_full() const
     {
         return num_empty_cells==0;
