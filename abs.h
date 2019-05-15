@@ -13,7 +13,7 @@
 //todo: move getChildren function to State class
 void getChildren(const State& state, std::vector<State>& children);
 
-State abs(const State& state);
+State alpha_beta_search(const State& state);
 piece max_value(const State& state, int alpha, int beta, State* max_state);
 piece min_value(const State& state, int alpha, int beta);
 

@@ -1,5 +1,6 @@
 #include <iostream>
 #include "state.h"
+#include "abs.h"
 using namespace std;
 
 
@@ -84,7 +85,7 @@ int main ()
 	while  (!(*(s)).is_full())
 	{
 
-		State* next = abs(s);		//Make the computer move
+		State* next = alpha_beta_search(s);		//Make the computer move
 		print_board(*(next));
 		
 		if ((*(s)).utility()==1)

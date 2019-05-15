@@ -13,7 +13,7 @@ void getChildren(const State& state, std::vector<State>& children) {
     return;
 }
 
-State abs(const State& state) {
+State alpha_beta_search(const State& state) {
     /*
         return one of the children states that has max
         value, or if there are more than on state with
