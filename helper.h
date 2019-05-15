@@ -1,5 +1,9 @@
+#ifndef HELPER_H
+#define HELPER_H
+
 #include <cstdint>
 
+//todo: remove struct pos (unused)
 struct pos {
 	uint8_t x;
 	uint8_t y;
@@ -11,7 +15,7 @@ struct pos {
 	}
 };
 
-typedef enum piece { us = 1, them = -1, empty = 0} ;
+enum piece { us = 1, them = -1, empty = 0} ;
 
 struct game_move {
     uint8_t col;
@@ -19,5 +23,4 @@ struct game_move {
     piece _piece;
 };
 
-
-
+#endif //HELPER_H

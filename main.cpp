@@ -1,5 +1,6 @@
 #include <iostream>
 #include "state.h"
+#include "abs.h"
 using namespace std;
 
 
@@ -88,7 +89,7 @@ int main ()
 
 		draw= false;
 		
-		State* next = abs(s);		//Make the computer move
+		State* next = alpha_beta_search(s);		//Make the computer move
 		print_board(*(next));
 		
 		if ((*(s)).utility()==(piece) us)
