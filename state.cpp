@@ -23,6 +23,9 @@ State::State(const State& x)
 			this->board[i][j] = x.board[i][j];
 		}
 	}
+
+	this->num_empty_cells = x.num_empty_cells;
+	this->last_move = x.last_move;
     
 
 }
@@ -36,6 +39,8 @@ State::State(const State &x, game_move &p)
 			this->board[i][j] = x.board[i][j];
 		}
 	}
+	this->num_empty_cells = x.num_empty_cells - 1 ;
+	this->last_move = p;
     this->board[p.row][p.col] = p._piece;
 }
 bool State::make_move(piece pc, uint8_t col, State* s) const//ezay ast5dem el copy constructor gwa el fn????
@@ -64,7 +69,7 @@ bool State::make_move(piece pc, uint8_t col, State* s) const//ezay ast5dem el co
 piece State::utility() const{
 	
 	int count = 0;
-	int play = last_move._piece;
+	piece play = last_move._piece;
 	//Horizontal test 
 	for (int i = 0; i < BOARD_COLS; i++)
 	{
