@@ -46,4 +46,4 @@ test_makefile:
 	@echo EXE=$(EXE)
 	@echo BUILD_DIR=$(BUILD_DIR)
 	@echo OBJ_DIR=$(OBJ_DIR)
-
+	@echo EXE_PATH=$(EXE_PATH)

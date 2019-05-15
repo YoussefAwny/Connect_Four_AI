@@ -11,7 +11,7 @@
 #define pos_inf (piece::us + 1)
 
 //todo: move getChildren function to State class
-void getChildren(const State& state, std::vector<State>& children);
+void getChildren(const State& state, std::vector<State*>& children);
 
 State alpha_beta_search(const State& state);
 piece max_value(const State& state, int alpha, int beta, State* max_state);
