@@ -62,12 +62,32 @@ bool State::make_move(piece pc, uint8_t col, State* s) const//ezay ast5dem el co
 }
 
 piece State::utility() const{
-    //todo: implement
+	
+	int count = 0;
+	int play = last_move._piece;
+	//Horizontal test 
+	for (int i = 0; i < 7; i++)
+	{
+		if (play == board[i][last_move.col])
+		{
+			count++;
+		}
 
-	/*for testing*/
-	piece won=empty;
-	return won;
-	/*for testing*/
+		if (count >= 4)
+			return play;
+	}
+
+	count = 0;
+	for (int i = 0; i < 6; i++)
+	{
+		if (play == board[x][i])
+		{
+			count++;
+		}
+
+		if (count >= 4)
+			return play;
+	}
 }
 
 State::~State()
