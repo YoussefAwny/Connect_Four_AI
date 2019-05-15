@@ -71,18 +71,20 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
         for (auto it = children.begin(); it != children.end(); ++it) {
 			auto child_ptr = *it;
             piece child_value = min_value(*child_ptr, alpha, beta);
-            max_util = max_util > child_value ? max_util : child_value;
+            if (child_value > max_util) {
+                max_util = child_value;
+                if (max_state != nullptr) {
+                    // update with state that has max_util so far, so the
+                    // caller can knows which state has this max_util,
+                    // note that there might be multiple states with the
+                    // same max_util value, this way we will just choose
+                    // the last state of the children that has max_util
+                    max_state->board[child_ptr->last_move.col][child_ptr->last_move.row] = 
+                        child_ptr->last_move._piece;
+                }
+            }
             // cutoff - stop looking in the other children if max_util
             // is already out of acceptable range [alpha, beta]
-            if (max_state != nullptr) {
-                // update with state that has max_util so far, so the
-                // caller can knows which state has this max_util,
-                // note that there might be multiple states with the
-                // same max_util value, this way we will just choose
-                // the last state of the children that has max_util
-                max_state->board[child_ptr->last_move.col][child_ptr->last_move.row] = 
-					child_ptr->last_move._piece;
-            }
             if (max_util > beta) {
                 break;
             }
@@ -117,7 +119,9 @@ piece min_value(const State& state, int alpha, int beta) {
         for (auto it = children.begin(); it != children.end(); ++it) {
 			auto child_ptr = *it;
             piece child_value = max_value(*child_ptr, alpha, beta, nullptr);
-            min_util = min_util < child_value ? min_util : child_value;
+            if (child_value < min_util) {
+                min_util = child_value;
+            }
             // cutoff - stop looking in the other children if min_util
             // is already out of acceptable range [alpha, beta]
             if (min_util < alpha) {
