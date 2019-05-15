@@ -88,18 +88,21 @@ int main ()
 	{
 
 		draw= false;
-		
+		/*
 		State new_State = alpha_beta_search(*(s));		//Make the computer move
 		State *next = &new_State;
 		print_board(new_State);
-		
-		//State* next = abs (s);
+		*/
 
-			print_board(*(next));
+		//for testing
+		s = abs (s);
+		print_board(*(s));
+
+
 		if ((*(s)).utility()==(piece) us)
 		{
 			cout<<endl;
-			cout<< "You Lost";
+			cout<< "You Lost"<<endl;;
 			break;
 		}
 
@@ -120,12 +123,12 @@ int main ()
 
 
 		//Make the move human entered
-		bool check=(*(next)).make_move(player,col, next);
+		bool check=(*(s)).make_move(player,col, s);
 
 		//Check if row is full
 		if (check)
 		{
-			print_board(*(next));
+			print_board(*(s));
 		}
 		
 		else 
@@ -137,14 +140,14 @@ int main ()
 				cout<<endl<<endl<<endl;
 				cout<<"Enter Col number you want to insert in : ";
 				cin>>col;
-				check=(*(next)).make_move(player,col, next);
+				check=(*(s)).make_move(player,col, s);
 			}
 		}
 
 		if ((*(s)).utility()==(piece)them)
 		{
 			cout<<endl;
-			cout<< "You Won";
+			cout<< "You Won"<<endl;;
 			break;
 		}
 
