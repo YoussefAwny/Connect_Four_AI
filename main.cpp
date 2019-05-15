@@ -26,7 +26,7 @@ void print_board (State s)
 
 /*for testing*/
 
-/*
+
 State* abs ( State* S)
 {
 	(*(S)).make_move((piece)us, 0 ,S );
@@ -34,7 +34,7 @@ State* abs ( State* S)
 	return S;
 }
 
-*/
+
 
 
 /*for testing */
@@ -89,18 +89,18 @@ int main ()
 
 		draw= false;
 		
-		print_board( alpha_beta_search(*(s)));		//Make the computer move
+		//print_board( alpha_beta_search(*(s)));		//Make the computer move
 		
 		//print_board (next);
 		
 		
 
 		//for testing
-		/*
+		
 		s = abs (s);
 		print_board(*(s));
 
-		*/
+		
 		if ((*(s)).utility()==(piece) us)
 		{
 			cout<<endl;
@@ -152,6 +152,8 @@ int main ()
 			cout<< "You Won"<<endl;;
 			break;
 		}
+
+		draw=true;
 
 	}
 
