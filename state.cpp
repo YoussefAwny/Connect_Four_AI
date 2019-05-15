@@ -154,7 +154,7 @@ piece State::utility() const{
 		count = 0;
 		int j = last_move.row - (5 - last_move.col);
 		for (int i = 5; i >= (last_move.row + last_move.col) - 6; i--) {
-			if (grid[i][j] == play) {
+			if (board[i][j] == play) {
 				count++;
 				if (count >= 4)
 					return play;
