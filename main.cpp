@@ -23,6 +23,21 @@ void print_board (State s)
 }
 
 
+/*for testing*/
+
+
+State* abs ( State* S)
+{
+	(*(S)).make_move((piece)us, 1 ,S );
+
+	return S;
+}
+
+
+
+
+/*for testing */
+
 
 
 int main ()
@@ -31,7 +46,7 @@ int main ()
 	piece player = them;		//any inserted move is from them
 
 
-	cout<<"if you want to play first type f and type any other key to play second: ";
+	cout<<"If you want to play first type f and type any other key to play second: ";
 	cin>>c;
 
 	State *s = new State() ;	//State to Start with
@@ -43,12 +58,12 @@ int main ()
 		print_board (*(s));
 
 		int col;
-		cout<<"Enter Col number you want to insert in : ";
+		cout<<"Enter Column number you want to insert in : ";
 		cin>>col;
 
 
-		//col value out fo range
-		if (col<1 || col>7)
+		//column value out fo range
+		while (col<1 || col>7)
 		{
 			cout<<endl;
 			cout<<"please enter the value of the Col between 1 and 7";
@@ -61,45 +76,35 @@ int main ()
 		//Make the move the human entered
 		bool check=(*(s)).make_move(player,col, s);
 
-		//Check if row is full
-		if (check)
-		{
-			print_board(*(s));
-		}
-		
-		else 
-		{
-			cout<<endl;
-			cout<<"Full Col";
-			cout<<endl<<endl<<endl;
-		}
-
-	
-
+		print_board(*(s));
 
 		
 	}
 
+	bool draw = true;
 	
 	while  (!(*(s)).is_full())
 	{
 
+		draw= false;
+		
 		State* next = abs(s);		//Make the computer move
 		print_board(*(next));
 		
-		if ((*(s)).utility()==1)
+		if ((*(s)).utility()==(piece) us)
 		{
 			cout<<endl;
 			cout<< "You Lost";
 			break;
 		}
 
+
 		int col;
 		cout<<"Enter Col number you want to insert in : ";
 		cin>>col;
 
 		//check if col value out of range
-		if (col<1 || col>7)
+		while (col<1 || col>7)
 		{
 			cout<<endl;
 			cout<<"please enter the value of the Col between 1 and 7";
@@ -109,8 +114,7 @@ int main ()
 		}
 
 
-		//Make the move human asked for
-		//Make the move the human entered
+		//Make the move human entered
 		bool check=(*(next)).make_move(player,col, next);
 
 		//Check if row is full
@@ -121,18 +125,30 @@ int main ()
 		
 		else 
 		{
-			cout<<endl;
-			cout<<"Full Col";
-			cout<<endl<<endl<<endl;
+			while (!check)
+			{
+				cout<<endl;
+				cout<<"Column is full enter another Column Number";
+				cout<<endl<<endl<<endl;
+				cout<<"Enter Col number you want to insert in : ";
+				cin>>col;
+				check=(*(next)).make_move(player,col, next);
+			}
 		}
 
-		if ((*(s)).utility()==-1)
+		if ((*(s)).utility()==(piece)them)
 		{
 			cout<<endl;
 			cout<< "You Won";
 			break;
 		}
 
+	}
+
+	if(draw)
+	{
+		cout<<endl;
+		cout<<"Draw";
 	}
 
 
