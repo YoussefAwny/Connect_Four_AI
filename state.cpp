@@ -77,10 +77,11 @@ piece State::utility() const{
 			return play;
 	}
 
+	//vertical test
 	count = 0;
 	for (int i = 0; i < 6; i++)
 	{
-		if (play == board[x][i])
+		if (play == board[last_move.row][i])
 		{
 			count++;
 		}
