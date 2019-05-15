@@ -96,7 +96,7 @@ piece State::utility() const{
 			return play;
 	}
 
-	//check lower upward diagonal  
+	//check upper upward diagonal  
 	if (last_move.row > last_move.col) {
 		count = 0;
 		int j = 0;
@@ -112,7 +112,7 @@ piece State::utility() const{
 		}
 	}
 
-	//check upper upward diagonal
+	//check lower upward diagonal
 	else {
 		count = 0;
 		int i = 0;
@@ -127,6 +127,39 @@ piece State::utility() const{
 			i++;
 		}
 	}
+
+	//check left downward diagonal     
+	if (last_move.col + last_move.row < 6) {
+		count = 0;
+		int i = 0;
+		for (int j = last_move.col + last_move.row; j >= 0 && i < BOARD_ROWS; j--) {
+			if (board[i][j] == play) {
+				count++;
+				if (count >= 4 )
+					return play;
+			}
+			else
+				count = 0;
+			i++;
+		}
+	}
+
+	//check right downward diagonal
+	else {
+		count = 0;
+		int j = last_move.row - (5 - last_move.col);
+		for (int i = 5; i >= (last_move.row + last_move.col) - 6; i--) {
+			if (grid[i][j] == play) {
+				count++;
+				if (count >= 4)
+					return play;
+			}
+			else
+				count = 0;
+			j++;
+		}
+	}
+	return piece::empty;
 }
 
 State::~State()
