@@ -71,8 +71,8 @@ piece State::utility() const{
 	int count = 0;
 	//TODO edge case for laspmove is empty
 	piece play = last_move._piece;
-	//Horizontal test 
-	for (int i = 0; i < BOARD_COLS; i++)
+	//vertical test 
+	for (int i = 0; i < BOARD_ROWS; i++)
 	{
 		if (play == board[i][last_move.col])
 		{
@@ -85,9 +85,9 @@ piece State::utility() const{
 			return play;
 	}
 
-	//vertical test
+	//horizontal test
 	count = 0;
-	for (int i = 0; i < BOARD_ROWS; i++)
+	for (int i = 0; i < BOARD_COLS; i++)
 	{
 		if (play == board[last_move.row][i])
 		{
