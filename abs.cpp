@@ -2,6 +2,12 @@
 #include "state.h"
 #include <vector>
 
+// define NDEBUG before including cassert to disable
+// all asserts in code
+// #define NDEBUG
+#include <cassert>
+
+
 void getChildren(const State& state, std::vector<State*>& children) {
 	/*
 		NOTE: it's the responsibility of the caller to manually delete
@@ -68,6 +74,10 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
         children.reserve(BOARD_COLS);
         int max_util = neg_inf;
         getChildren(state, children);
+        // since we already checked that this state is not a
+        // leaf node (terminal node), children vector should
+        // never be empty
+        assert(children.size() != 0);
         for (auto it = children.begin(); it != children.end(); ++it) {
 			auto child_ptr = *it;
             piece child_value = min_value(*child_ptr, alpha, beta);
@@ -116,6 +126,10 @@ piece min_value(const State& state, int alpha, int beta) {
         children.reserve(BOARD_COLS);
         int min_util = pos_inf;
         getChildren(state, children);
+        // since we already checked that this state is not a
+        // leaf node (terminal node), children vector should
+        // never be empty
+        assert(children.size() != 0);
         for (auto it = children.begin(); it != children.end(); ++it) {
 			auto child_ptr = *it;
             piece child_value = max_value(*child_ptr, alpha, beta, nullptr);
