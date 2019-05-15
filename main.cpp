@@ -7,7 +7,7 @@ using namespace std;
 //Function to print the board
 void print_board (State s)
 {
-	for (int i = 0 ; i<BOARD_ROWS ; i++)
+	for (int i = BOARD_ROWS -1 ; i>=0 ; i--)
 		{
 			for (int j=0 ; j<BOARD_COLS ; j++ )
 			{

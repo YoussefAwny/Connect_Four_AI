@@ -50,7 +50,7 @@ bool State::make_move(piece pc, uint8_t col, State* s) const//ezay ast5dem el co
     (*(s)).last_move.col =col;
     (*(s)).last_move._piece = pc;
 
-    for(int i=BOARD_ROWS-1; i>=0; i--)
+	for(int i=0; i<BOARD_ROWS; i++)
     {
         if ( (*(s)).board[i][col] == piece::empty)
         {
@@ -71,8 +71,8 @@ piece State::utility() const{
 	int count = 0;
 	//TODO edge case for laspmove is empty
 	piece play = last_move._piece;
-	//vertical test 
-	for (int i = 0; i < BOARD_ROWS; i++)
+	//Horizontal test 
+	for (int i = 0; i < BOARD_COLS; i++)
 	{
 		if (play == board[i][last_move.col])
 		{
@@ -85,9 +85,9 @@ piece State::utility() const{
 			return play;
 	}
 
-	//horizontal test
+	//vertical test
 	count = 0;
-	for (int i = 0; i < BOARD_COLS; i++)
+	for (int i = 0; i < BOARD_ROWS; i++)
 	{
 		if (play == board[last_move.row][i])
 		{
