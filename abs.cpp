@@ -13,7 +13,7 @@ void getChildren(const State& state, std::vector<State*>& children) {
         if (state.make_move(new_piece, i, s)) {
             children.push_back(s);
 		} else {
-			delete s;
+			delete s;	//todo: improve performance
 		}
 	}
     return;
@@ -61,9 +61,10 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
     } else {
         // no winner, board is not full yet, there must exist
         // children to this state
-        // initialize the vector with the max possible capacity
+        std::vector<State*> children;
+        // reserve the max possible capacity
         // to improve performance when pushing new states
-        std::vector<State*> children(BOARD_COLS);
+        children.reserve(BOARD_COLS);
         int max_util = neg_inf;
         getChildren(state, children);
         for (auto it = children.begin(); it != children.end(); ++it) {
@@ -105,9 +106,10 @@ piece min_value(const State& state, int alpha, int beta) {
     } else {
         // no winner, board is not full yet, there must exist
         // children to this state
-        // initialize the vector with the max possible capacity
+        std::vector<State*> children;
+        // reserve the max possible capacity
         // to improve performance when pushing new states
-        std::vector<State*> children(BOARD_COLS);
+        children.reserve(BOARD_COLS);
         int min_util = pos_inf;
         getChildren(state, children);
         for (auto it = children.begin(); it != children.end(); ++it) {
