@@ -95,6 +95,7 @@ int main ()
 		*/
 
 		//for testing
+		
 		s = abs (s);
 		print_board(*(s));
 
@@ -108,7 +109,7 @@ int main ()
 
 
 		int col;
-		cout<<"Enter Col number you want to insert in : ";
+		cout<<"Enter Column number you want to insert in : ";
 		cin>>col;
 
 		//check if col value out of range
