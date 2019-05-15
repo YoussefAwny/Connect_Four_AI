@@ -89,9 +89,13 @@ int main ()
 
 		draw= false;
 		
-		State* next = alpha_beta_search(const State& state);		//Make the computer move
-		print_board(*(next));
+		State new_State = alpha_beta_search(*(s));		//Make the computer move
+		State *next = &new_State;
+		print_board(new_State);
 		
+		//State* next = abs (s);
+
+			print_board(*(next));
 		if ((*(s)).utility()==(piece) us)
 		{
 			cout<<endl;
