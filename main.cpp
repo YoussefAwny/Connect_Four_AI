@@ -26,15 +26,15 @@ void print_board (State s)
 
 /*for testing*/
 
-
+/*
 State* abs ( State* S)
 {
-	(*(S)).make_move((piece)us, 1 ,S );
+	(*(S)).make_move((piece)us, 0 ,S );
 
 	return S;
 }
 
-
+*/
 
 
 /*for testing */
@@ -75,7 +75,7 @@ int main ()
 		
 
 		//Make the move the human entered
-		bool check=(*(s)).make_move(player,col, s);
+		bool check=(*(s)).make_move(player,col-1, s);
 
 		print_board(*(s));
 
@@ -88,18 +88,19 @@ int main ()
 	{
 
 		draw= false;
-		/*
-		State new_State = alpha_beta_search(*(s));		//Make the computer move
-		State *next = &new_State;
-		print_board(new_State);
-		*/
+		
+		print_board( alpha_beta_search(*(s)));		//Make the computer move
+		
+		//print_board (next);
+		
+		
 
 		//for testing
-		
+		/*
 		s = abs (s);
 		print_board(*(s));
 
-
+		*/
 		if ((*(s)).utility()==(piece) us)
 		{
 			cout<<endl;
@@ -124,7 +125,7 @@ int main ()
 
 
 		//Make the move human entered
-		bool check=(*(s)).make_move(player,col, s);
+		bool check=(*(s)).make_move(player,col-1, s);
 
 		//Check if row is full
 		if (check)
