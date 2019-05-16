@@ -5,33 +5,35 @@ using namespace std;
 
 
 //Function to print the board
-void print_board (State s)
+void print_board (State s, char computer='O', char human='X', char empty='_', char space=' ', bool print_markers = true)
 {
-	for (int i = BOARD_ROWS -1 ; i>=0 ; i--)
+	const char* row_marker = " <";
+	const char* col_marker = "^";
+	for (int i=BOARD_ROWS-1 ; i>=0 ; i--)
+	{
+		for (int j=0 ; j<BOARD_COLS ; j++)
 		{
-			for (int j=0 ; j<BOARD_COLS ; j++ )
-			{
-				if(s.board[i][j]==-1)
-					cout<<"2";
-				else
-				cout<<s.board[i][j];
-				cout<<"\t";
-			}
-			cout<<endl;
+			if (s.board[i][j] == piece::them)
+				cout << human;
+			else if (s.board[i][j] == piece::us)
+				cout << computer;
+			else
+				cout << empty;
+			cout << space;
 		}
-
-	cout<<endl<<endl;
-}
-
-
-/*for testing*/
-
-
-State* abs ( State* S)
-{
-	(*(S)).make_move((piece)us, 0 ,S );
-
-	return S;
+		if (print_markers && s.last_move.col != (uint8_t) -1) {
+			if (i == s.last_move.row)
+				cout << row_marker;
+		}
+		cout << endl;
+	}
+	if (print_markers && s.last_move.col != (uint8_t) -1) {
+		for (int k=0; k<s.last_move.col*2; ++k) {
+			cout << " ";
+		}
+		cout << col_marker;
+	}
+	cout << endl << endl;
 }
 
 
