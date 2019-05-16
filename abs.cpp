@@ -10,10 +10,9 @@
 // define VERBOSE = 1 to enable logging more info,
 // disable by setting VERBOSE = 0
 #define VERBOSE 0
-
-/* for VERBOSE option */
 #include <iostream>
 using namespace std;
+
 namespace abs_global {
     // even tree levels are maximizers, odd are minimizers,
     // tree_level = 0 corresponds to the level of the root state
@@ -77,7 +76,7 @@ piece max_value(State& state, int alpha, int beta, const unsigned int max_level,
     // keep track of current level in the tree,
     // make sure to decrement this before EACH
     // return statement
-    if (VERBOSE) ++abs_global::tree_level;
+    ++abs_global::tree_level;
     // get state utility
     piece p = state.utility();
     // check if reached max_level allowed
@@ -90,12 +89,12 @@ piece max_value(State& state, int alpha, int beta, const unsigned int max_level,
     }
     // check if terminal node
     if (p != piece::empty) {
-        if (VERBOSE) --abs_global::tree_level;
+        --abs_global::tree_level;
         return p;
     } else if (state.is_full()) {
         // no winner, and board is full, therefore it's a draw
         // and this state is a leaf node in the tree
-        if (VERBOSE) --abs_global::tree_level;
+        --abs_global::tree_level;
         return p;
     } else {
         // no winner, board is not full yet, there must exist
@@ -138,7 +137,7 @@ piece max_value(State& state, int alpha, int beta, const unsigned int max_level,
         }
         // assert that we at least found one child
         assert(max_util != neg_inf);
-        if (VERBOSE) --abs_global::tree_level;
+        --abs_global::tree_level;
         return (piece) max_util;
     }
 }
@@ -147,7 +146,7 @@ piece min_value(State& state, int alpha, int beta, const unsigned int max_level)
     // keep track of current level in the tree,
     // make sure to decrement this before EACH
     // return statement
-    if (VERBOSE) ++abs_global::tree_level;
+    ++abs_global::tree_level;
     // get state utility
     piece p = state.utility();
     // check if reached max_level allowed
@@ -160,12 +159,12 @@ piece min_value(State& state, int alpha, int beta, const unsigned int max_level)
     }
     // check if terminal node
     if (p != piece::empty) {
-        if (VERBOSE) --abs_global::tree_level;
+        --abs_global::tree_level;
         return p;
     } else if (state.is_full()) {
         // no winner, and board is full, therefore it's a draw
         // and this state is a leaf node in the tree
-        if (VERBOSE) --abs_global::tree_level;
+        --abs_global::tree_level;
         return p;
     } else {
         // no winner, board is not full yet, there must exist
@@ -199,7 +198,7 @@ piece min_value(State& state, int alpha, int beta, const unsigned int max_level)
         }
         // assert that we at least found one child
         assert(min_util != pos_inf);
-        if (VERBOSE) --abs_global::tree_level;
+        --abs_global::tree_level;
         return (piece) min_util;
     }
 }
