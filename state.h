@@ -3,8 +3,8 @@
 #ifndef STATE_H
 #define STATE_H
 
-#define BOARD_ROWS 4
-#define BOARD_COLS 4
+#define BOARD_ROWS 6
+#define BOARD_COLS 7
 
 
 class State
