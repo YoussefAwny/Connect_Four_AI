@@ -14,7 +14,7 @@
 void getChildren(const State& state, std::vector<State*>& children);
 
 State alpha_beta_search(const State& state);
-piece max_value(const State& state, int alpha, int beta, State* max_state);
-piece min_value(const State& state, int alpha, int beta);
+piece max_value(State& state, int alpha, int beta, State* max_state);
+piece min_value(State& state, int alpha, int beta);
 
 #endif //ABS_H

@@ -19,7 +19,7 @@ namespace verbose {
     int tree_level = 0;
 }
 
-
+//todo: unused function
 void getChildren(const State& state, std::vector<State*>& children) {
 	/*
 		NOTE: it's the responsibility of the caller to manually delete
@@ -47,13 +47,16 @@ State alpha_beta_search(const State& state) {
         however this is not done here, we just return one
         of the children that has the max value
     */
-    State max_state(state); //initialize with the current state
-	//don't use the return value, just get max_state
-    max_value(state, neg_inf, pos_inf, &max_state);
+    // create state to receive result, initialize with the current state
+    State max_state(state);
+    // keep the passed state unchanged, make a copy
+    State working_state(state);
+	// don't use the return value, just get max_state
+    max_value(working_state, neg_inf, pos_inf, &max_state);
     return max_state;
 }
 
-piece max_value(const State& state, int alpha, int beta, State* max_state) {
+piece max_value(State& state, int alpha, int beta, State* max_state) {
     /*
         alpha is lower bound of the acceptable return value
         of this function, beta is the upper bound, these
@@ -82,58 +85,69 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
     } else {
         // no winner, board is not full yet, there must exist
         // children to this state
-        std::vector<State*> children;
+        // std::vector<State*> children;
         // reserve the max possible capacity
         // to improve performance when pushing new states
-        children.reserve(BOARD_COLS);
-        int max_util = neg_inf;
-        getChildren(state, children);
+        // children.reserve(BOARD_COLS);
+        // getChildren(state, children);
         // since we already checked that this state is not a
         // leaf node (terminal node), children vector should
         // never be empty
-        assert(children.size() != 0);
-        if (VERBOSE && verbose::tree_level == 1) {
-            std::cout << "> num children of root: " << children.size() << std::endl;
-        }
-        for (auto it = children.begin(); it != children.end(); ++it) {
-			auto child_ptr = *it;
-            if (VERBOSE && verbose::tree_level == 1) {
-                std::cout << "<<<<<<<<<<<<<<<<<<<<< child started" << std::endl;
-                std::cout << "<<<<<<<<<<<<<<<<<<<<< alpha, beta: " << alpha << ", " << beta << endl;
-            }
-            piece child_value = min_value(*child_ptr, alpha, beta);
-            if (VERBOSE && verbose::tree_level == 1) {
-                std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child finished" << std::endl;
-                std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child utility: " << child_value << ", max_util: " << max_util << endl;
-            }
-            if (child_value > max_util) {
-                max_util = child_value;
-                if (max_state != nullptr) {
-                    // update with state that has max_util so far, so the
-                    // caller can knows which state has this max_util,
-                    // note that there might be multiple states with the
-                    // same max_util value, this way we will just choose
-                    // the last state of the children that has max_util
-                    *max_state = State(*child_ptr);
+        // assert(children.size() != 0);
+        // if (VERBOSE && verbose::tree_level == 1) {
+        //     std::cout << "> num children of root: " << children.size() << std::endl;
+        // }
+        int max_util = neg_inf;
+        piece new_piece = state.last_move._piece == piece::us ? piece::them : piece::us;
+        for (int i=0; i<BOARD_COLS; ++i) {
+            game_move gm = state.last_move;
+            if (state.insert_piece(new_piece, i)) {
+                if (VERBOSE && verbose::tree_level == 1) {
+                    std::cout << "<<<<<<<<<<<<<<<<<<<<< child started" << std::endl;
+                    std::cout << "<<<<<<<<<<<<<<<<<<<<< alpha, beta: " << alpha << ", " << beta << endl;
                 }
+                piece child_value = min_value(state, alpha, beta);
+                if (VERBOSE && verbose::tree_level == 1) {
+                    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child finished" << std::endl;
+                    std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child utility: " << child_value << ", max_util: " << max_util << endl;
+                }
+                if (child_value > max_util) {
+                    max_util = child_value;
+                    if (max_state != nullptr) {
+                        // update with state that has max_util so far, so the
+                        // caller can knows which state has this max_util,
+                        // note that there might be multiple states with the
+                        // same max_util value, this way we will just choose
+                        // the last state of the children that has max_util
+                        *max_state = State(state);
+                    }
+                }
+                // reset last_move (before loop iteration ends (before any
+                // breaks) but after the state is possibly saved in max_state)
+                state.remove_piece(state.last_move.row, state.last_move.col, gm);
+                // cutoff - stop looking in the other children if max_util
+                // is already out of acceptable range [alpha, beta]
+                if (max_util >= beta) {
+                    break;
+                }
+                alpha = max_util > alpha ? max_util : alpha;
             }
-            // cutoff - stop looking in the other children if max_util
-            // is already out of acceptable range [alpha, beta]
-            if (max_util >= beta) {
-                break;
-            }
-            alpha = max_util > alpha ? max_util : alpha;
         }
+        // assert that we at least found one child
+        assert(max_util != neg_inf);
+        // for (auto it = children.begin(); it != children.end(); ++it) {
+		// 	auto child_ptr = *it;
+        // }
 		//delete all children
-		for (auto it = children.begin(); it != children.end(); ++it) {
-			delete *it;
-		}
+		// for (auto it = children.begin(); it != children.end(); ++it) {
+		// 	delete *it;
+		// }
         if (VERBOSE) --verbose::tree_level;
         return (piece) max_util;
     }
 }
 
-piece min_value(const State& state, int alpha, int beta) {
+piece min_value(State& state, int alpha, int beta) {
     if (VERBOSE) ++verbose::tree_level;
     // check if terminal node
     piece p = state.utility();
@@ -148,41 +162,51 @@ piece min_value(const State& state, int alpha, int beta) {
     } else {
         // no winner, board is not full yet, there must exist
         // children to this state
-        std::vector<State*> children;
+        // std::vector<State*> children;
         // reserve the max possible capacity
         // to improve performance when pushing new states
-        children.reserve(BOARD_COLS);
-        int min_util = pos_inf;
-        getChildren(state, children);
+        // children.reserve(BOARD_COLS);
+        // getChildren(state, children);
         // since we already checked that this state is not a
         // leaf node (terminal node), children vector should
         // never be empty
-        assert(children.size() != 0);
-        for (auto it = children.begin(); it != children.end(); ++it) {
-			auto child_ptr = *it;
-            if (VERBOSE && verbose::tree_level == 2) {
-                std::cout << "                  <<<< child started" << std::endl;
-                std::cout << "                  <<<< alpha, beta: " << alpha << ", " << beta << endl;
+        // assert(children.size() != 0);
+        int min_util = pos_inf;
+        piece new_piece = state.last_move._piece == piece::us ? piece::them : piece::us;
+        for (int i=0; i<BOARD_COLS; ++i) {
+            game_move gm = state.last_move;
+            if (state.insert_piece(new_piece, i)) {
+                if (VERBOSE && verbose::tree_level == 2) {
+                    std::cout << "                  <<<< child started" << std::endl;
+                    std::cout << "                  <<<< alpha, beta: " << alpha << ", " << beta << endl;
+                }
+                piece child_value = max_value(state, alpha, beta, nullptr);
+                if (VERBOSE && verbose::tree_level == 2) {
+                    std::cout << "                  >>>>>>>>>>>>>>>> child finished" << std::endl;
+                    std::cout << "                  >>>>>>>>>>>>>>>> child utility: " << child_value << ", min_util: " << min_util << endl;
+                }
+                if (child_value < min_util) {
+                    min_util = child_value;
+                }
+                // reset last_move (before loop iteration ends)
+                state.remove_piece(state.last_move.row, state.last_move.col, gm);
+                // cutoff - stop looking in the other children if min_util
+                // is already out of acceptable range [alpha, beta]
+                if (min_util <= alpha) {
+                    break;
+                }
+                beta = min_util < beta ? min_util : beta;
             }
-            piece child_value = max_value(*child_ptr, alpha, beta, nullptr);
-            if (VERBOSE && verbose::tree_level == 2) {
-                std::cout << "                  >>>>>>>>>>>>>>>> child finished" << std::endl;
-                std::cout << "                  >>>>>>>>>>>>>>>> child utility: " << child_value << ", min_util: " << min_util << endl;
-            }
-            if (child_value < min_util) {
-                min_util = child_value;
-            }
-            // cutoff - stop looking in the other children if min_util
-            // is already out of acceptable range [alpha, beta]
-            if (min_util <= alpha) {
-				break;
-            }
-            beta = min_util < beta ? min_util : beta;
         }
-		//delete all children
-		for (auto it = children.begin(); it != children.end(); ++it) {
-			delete *it;
-		}
+        // assert that we at least found one child
+        assert(min_util != pos_inf);
+        // for (auto it = children.begin(); it != children.end(); ++it) {
+		// 	auto child_ptr = *it;
+        // }
+		// //delete all children
+		// for (auto it = children.begin(); it != children.end(); ++it) {
+		// 	delete *it;
+		// }
         if (VERBOSE) --verbose::tree_level;
         return (piece) min_util;
     }
