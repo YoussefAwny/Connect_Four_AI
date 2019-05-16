@@ -105,12 +105,12 @@ piece max_value(State& state, int alpha, int beta, const unsigned int max_level,
         for (int i=0; i<BOARD_COLS; ++i) {
             game_move gm = state.last_move;
             if (state.insert_piece(new_piece, i)) {
-                if (VERBOSE && abs_global::tree_level == 1) {
+                if (VERBOSE && abs_global::tree_level == 0) {
                     std::cout << "<<<<<<<<<<<<<<<<<<<<< child started" << std::endl;
                     std::cout << "<<<<<<<<<<<<<<<<<<<<< alpha, beta: " << alpha << ", " << beta << endl;
                 }
                 piece child_value = min_value(state, alpha, beta, max_level);
-                if (VERBOSE && abs_global::tree_level == 1) {
+                if (VERBOSE && abs_global::tree_level == 0) {
                     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child finished" << std::endl;
                     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child utility: " << child_value << ", max_util: " << max_util << endl;
                 }
@@ -175,12 +175,12 @@ piece min_value(State& state, int alpha, int beta, const unsigned int max_level)
         for (int i=0; i<BOARD_COLS; ++i) {
             game_move gm = state.last_move;
             if (state.insert_piece(new_piece, i)) {
-                if (VERBOSE && abs_global::tree_level == 2) {
+                if (VERBOSE && abs_global::tree_level == 1) {
                     std::cout << "                  <<<< child started" << std::endl;
                     std::cout << "                  <<<< alpha, beta: " << alpha << ", " << beta << endl;
                 }
                 piece child_value = max_value(state, alpha, beta, max_level, nullptr);
-                if (VERBOSE && abs_global::tree_level == 2) {
+                if (VERBOSE && abs_global::tree_level == 1) {
                     std::cout << "                  >>>>>>>>>>>>>>>> child finished" << std::endl;
                     std::cout << "                  >>>>>>>>>>>>>>>> child utility: " << child_value << ", min_util: " << min_util << endl;
                 }
