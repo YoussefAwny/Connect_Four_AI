@@ -1,8 +1,6 @@
 #include "abs.h"
 #include "state.h"
 #include <vector>
-#include <cstdlib>
-#include <ctime>
 
 // define NDEBUG before including cassert to
 // disable all asserts in code
@@ -51,19 +49,16 @@ State alpha_beta_search(const State& state, const unsigned int max_level) {
     */
     // max_level = 0 is meaningless (it means no serach)
     assert(max_level > 0);
-    // create vector of states to receive all the possible
-    // states (one or more) that have max utility value
-    vector<State> max_states;
+    // create state to receive result, initialize with the current state
+    State max_state(state);
     // keep the passed state unchanged, make a copy
     State working_state(state);
 	// don't use the return value, just get max_state
-    max_value(working_state, neg_inf, pos_inf, max_level, &max_states);
-    // choose one of the possible states to play
-    srand(time(nullptr));
-    return max_states[rand() % max_states.size()];
+    max_value(working_state, neg_inf, pos_inf, max_level, &max_state);
+    return max_state;
 }
 
-piece max_value(State& state, int alpha, int beta, const unsigned int max_level, vector<State>* max_states) {
+piece max_value(State& state, int alpha, int beta, const unsigned int max_level, State* max_state) {
     /*
         alpha is lower bound of the acceptable return value
         of this function, beta is the upper bound, these
@@ -120,19 +115,14 @@ piece max_value(State& state, int alpha, int beta, const unsigned int max_level,
                 }
                 if (child_value > max_util) {
                     max_util = child_value;
-                    if (max_states != nullptr) {
-                        // we found a bigger utility value,
-                        // remove all states in the vector that may have
-                        // been added before, and insert the current state
-                        // as the new best state
-                        max_states->clear();
-                        max_states->push_back(state);
+                    if (max_state != nullptr) {
+                        // update with state that has max_util so far, so the
+                        // caller can knows which state has this max_util,
+                        // note that there might be multiple states with the
+                        // same max_util value, this way we will just choose
+                        // the last state of the children that has max_util
+                        *max_state = State(state);
                     }
-                } else if (max_states != nullptr && child_value == max_util) {
-                    // we found a state with the same utility value found
-                    // so far, add it to the list of states that can be
-                    // chosen from.
-                    max_states->push_back(state);
                 }
                 // reset last_move (before loop iteration ends (before any
                 // breaks) but after the state is possibly saved in max_state)
