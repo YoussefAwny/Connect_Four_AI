@@ -14,9 +14,10 @@
 /* for VERBOSE option */
 #include <iostream>
 using namespace std;
-namespace verbose {
-    // even tree levels are maximizers, odd are minimizers
-    int tree_level = 0;
+namespace abs_global {
+    // even tree levels are maximizers, odd are minimizers,
+    // tree_level = 0 corresponds to the level of the root state
+    int tree_level = -1;
 }
 
 //todo: unused function
@@ -37,7 +38,7 @@ void getChildren(const State& state, std::vector<State*>& children) {
     return;
 }
 
-State alpha_beta_search(const State& state) {
+State alpha_beta_search(const State& state, const unsigned int max_level) {
     /*
         return one of the children states that has max
         value, or if there are more than on state with
@@ -47,16 +48,18 @@ State alpha_beta_search(const State& state) {
         however this is not done here, we just return one
         of the children that has the max value
     */
+    // max_level = 0 is meaningless (it means no serach)
+    assert(max_level > 0);
     // create state to receive result, initialize with the current state
     State max_state(state);
     // keep the passed state unchanged, make a copy
     State working_state(state);
 	// don't use the return value, just get max_state
-    max_value(working_state, neg_inf, pos_inf, &max_state);
+    max_value(working_state, neg_inf, pos_inf, max_level, &max_state);
     return max_state;
 }
 
-piece max_value(State& state, int alpha, int beta, State* max_state) {
+piece max_value(State& state, int alpha, int beta, const unsigned int max_level, State* max_state) {
     /*
         alpha is lower bound of the acceptable return value
         of this function, beta is the upper bound, these
@@ -71,16 +74,28 @@ piece max_value(State& state, int alpha, int beta, State* max_state) {
         to keep looking in the other children, just return the
         value found (which is the least value we can return)
     */
-    if (VERBOSE) ++verbose::tree_level;
-    // check if terminal node
+    // keep track of current level in the tree,
+    // make sure to decrement this before EACH
+    // return statement
+    if (VERBOSE) ++abs_global::tree_level;
+    // get state utility
     piece p = state.utility();
+    // check if reached max_level allowed
+    if (abs_global::tree_level == max_level) {
+        // if (VERBOSE) {
+        //     cout << " # Reached max_level in tree" << endl;
+        // }
+        --abs_global::tree_level;
+        return p;
+    }
+    // check if terminal node
     if (p != piece::empty) {
-        if (VERBOSE) --verbose::tree_level;
+        if (VERBOSE) --abs_global::tree_level;
         return p;
     } else if (state.is_full()) {
-        // no winner, and board is full, therefore it's a draw and
-        // a leaf node in the tree
-        if (VERBOSE) --verbose::tree_level;
+        // no winner, and board is full, therefore it's a draw
+        // and this state is a leaf node in the tree
+        if (VERBOSE) --abs_global::tree_level;
         return p;
     } else {
         // no winner, board is not full yet, there must exist
@@ -90,12 +105,12 @@ piece max_value(State& state, int alpha, int beta, State* max_state) {
         for (int i=0; i<BOARD_COLS; ++i) {
             game_move gm = state.last_move;
             if (state.insert_piece(new_piece, i)) {
-                if (VERBOSE && verbose::tree_level == 1) {
+                if (VERBOSE && abs_global::tree_level == 1) {
                     std::cout << "<<<<<<<<<<<<<<<<<<<<< child started" << std::endl;
                     std::cout << "<<<<<<<<<<<<<<<<<<<<< alpha, beta: " << alpha << ", " << beta << endl;
                 }
-                piece child_value = min_value(state, alpha, beta);
-                if (VERBOSE && verbose::tree_level == 1) {
+                piece child_value = min_value(state, alpha, beta, max_level);
+                if (VERBOSE && abs_global::tree_level == 1) {
                     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child finished" << std::endl;
                     std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child utility: " << child_value << ", max_util: " << max_util << endl;
                 }
@@ -123,22 +138,34 @@ piece max_value(State& state, int alpha, int beta, State* max_state) {
         }
         // assert that we at least found one child
         assert(max_util != neg_inf);
-        if (VERBOSE) --verbose::tree_level;
+        if (VERBOSE) --abs_global::tree_level;
         return (piece) max_util;
     }
 }
 
-piece min_value(State& state, int alpha, int beta) {
-    if (VERBOSE) ++verbose::tree_level;
-    // check if terminal node
+piece min_value(State& state, int alpha, int beta, const unsigned int max_level) {
+    // keep track of current level in the tree,
+    // make sure to decrement this before EACH
+    // return statement
+    if (VERBOSE) ++abs_global::tree_level;
+    // get state utility
     piece p = state.utility();
+    // check if reached max_level allowed
+    if (abs_global::tree_level == max_level) {
+        // if (VERBOSE) {
+        //     cout << " # Reached max_level in tree" << endl;
+        // }
+        --abs_global::tree_level;
+        return p;
+    }
+    // check if terminal node
     if (p != piece::empty) {
-        if (VERBOSE) --verbose::tree_level;
+        if (VERBOSE) --abs_global::tree_level;
         return p;
     } else if (state.is_full()) {
-        // no winner, and board is full, therefore it's a draw and
-        // a leaf node in the tree
-        if (VERBOSE) --verbose::tree_level;
+        // no winner, and board is full, therefore it's a draw
+        // and this state is a leaf node in the tree
+        if (VERBOSE) --abs_global::tree_level;
         return p;
     } else {
         // no winner, board is not full yet, there must exist
@@ -148,12 +175,12 @@ piece min_value(State& state, int alpha, int beta) {
         for (int i=0; i<BOARD_COLS; ++i) {
             game_move gm = state.last_move;
             if (state.insert_piece(new_piece, i)) {
-                if (VERBOSE && verbose::tree_level == 2) {
+                if (VERBOSE && abs_global::tree_level == 2) {
                     std::cout << "                  <<<< child started" << std::endl;
                     std::cout << "                  <<<< alpha, beta: " << alpha << ", " << beta << endl;
                 }
-                piece child_value = max_value(state, alpha, beta, nullptr);
-                if (VERBOSE && verbose::tree_level == 2) {
+                piece child_value = max_value(state, alpha, beta, max_level, nullptr);
+                if (VERBOSE && abs_global::tree_level == 2) {
                     std::cout << "                  >>>>>>>>>>>>>>>> child finished" << std::endl;
                     std::cout << "                  >>>>>>>>>>>>>>>> child utility: " << child_value << ", min_util: " << min_util << endl;
                 }
@@ -172,7 +199,7 @@ piece min_value(State& state, int alpha, int beta) {
         }
         // assert that we at least found one child
         assert(min_util != pos_inf);
-        if (VERBOSE) --verbose::tree_level;
+        if (VERBOSE) --abs_global::tree_level;
         return (piece) min_util;
     }
 }

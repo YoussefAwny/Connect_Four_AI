@@ -13,8 +13,9 @@
 //todo: move getChildren function to State class
 void getChildren(const State& state, std::vector<State*>& children);
 
-State alpha_beta_search(const State& state);
-piece max_value(State& state, int alpha, int beta, State* max_state);
-piece min_value(State& state, int alpha, int beta);
+// note: max_level default value is set to greatest possible value (unsigned of -1)
+State alpha_beta_search(const State& state, const unsigned int max_level = -1);
+piece max_value(State& state, int alpha, int beta, const unsigned int max_level, State* max_state);
+piece min_value(State& state, int alpha, int beta, const unsigned int max_level);
 
 #endif //ABS_H

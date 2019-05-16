@@ -89,7 +89,8 @@ int main ()
 
 		draw= false;
 		
-		*(s) = alpha_beta_search(*(s));		//Make the computer move
+		// for unlimited search, pass -1
+		*(s) = alpha_beta_search(*(s), 5);		//Make the computer move
 		
 		print_board(*(s));
 		
