@@ -2,10 +2,22 @@
 #include "state.h"
 #include <vector>
 
-// define NDEBUG before including cassert to disable
-// all asserts in code
+// define NDEBUG before including cassert to
+// disable all asserts in code
 // #define NDEBUG
 #include <cassert>
+
+// define VERBOSE = 1 to enable logging more info,
+// disable by setting VERBOSE = 0
+#define VERBOSE 0
+
+/* for VERBOSE option */
+#include <iostream>
+using namespace std;
+namespace verbose {
+    // even tree levels are maximizers, odd are minimizers
+    int tree_level = 0;
+}
 
 
 void getChildren(const State& state, std::vector<State*>& children) {
@@ -56,14 +68,16 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
         to keep looking in the other children, just return the
         value found (which is the least value we can return)
     */
-
+    if (VERBOSE) ++verbose::tree_level;
     // check if terminal node
     piece p = state.utility();
     if (p != piece::empty) {
+        if (VERBOSE) --verbose::tree_level;
         return p;
     } else if (state.is_full()) {
         // no winner, and board is full, therefore it's a draw and
         // a leaf node in the tree
+        if (VERBOSE) --verbose::tree_level;
         return p;
     } else {
         // no winner, board is not full yet, there must exist
@@ -78,9 +92,20 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
         // leaf node (terminal node), children vector should
         // never be empty
         assert(children.size() != 0);
+        if (VERBOSE && verbose::tree_level == 1) {
+            std::cout << "> num children of root: " << children.size() << std::endl;
+        }
         for (auto it = children.begin(); it != children.end(); ++it) {
 			auto child_ptr = *it;
+            if (VERBOSE && verbose::tree_level == 1) {
+                std::cout << "<<<<<<<<<<<<<<<<<<<<< child started" << std::endl;
+                std::cout << "<<<<<<<<<<<<<<<<<<<<< alpha, beta: " << alpha << ", " << beta << endl;
+            }
             piece child_value = min_value(*child_ptr, alpha, beta);
+            if (VERBOSE && verbose::tree_level == 1) {
+                std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child finished" << std::endl;
+                std::cout << ">>>>>>>>>>>>>>>>>>>>>>>> child utility: " << child_value << ", max_util: " << max_util << endl;
+            }
             if (child_value > max_util) {
                 max_util = child_value;
                 if (max_state != nullptr) {
@@ -103,18 +128,22 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
 		for (auto it = children.begin(); it != children.end(); ++it) {
 			delete *it;
 		}
+        if (VERBOSE) --verbose::tree_level;
         return (piece) max_util;
     }
 }
 
 piece min_value(const State& state, int alpha, int beta) {
+    if (VERBOSE) ++verbose::tree_level;
     // check if terminal node
     piece p = state.utility();
     if (p != piece::empty) {
+        if (VERBOSE) --verbose::tree_level;
         return p;
     } else if (state.is_full()) {
         // no winner, and board is full, therefore it's a draw and
         // a leaf node in the tree
+        if (VERBOSE) --verbose::tree_level;
         return p;
     } else {
         // no winner, board is not full yet, there must exist
@@ -131,7 +160,15 @@ piece min_value(const State& state, int alpha, int beta) {
         assert(children.size() != 0);
         for (auto it = children.begin(); it != children.end(); ++it) {
 			auto child_ptr = *it;
+            if (VERBOSE && verbose::tree_level == 2) {
+                std::cout << "                  <<<< child started" << std::endl;
+                std::cout << "                  <<<< alpha, beta: " << alpha << ", " << beta << endl;
+            }
             piece child_value = max_value(*child_ptr, alpha, beta, nullptr);
+            if (VERBOSE && verbose::tree_level == 2) {
+                std::cout << "                  >>>>>>>>>>>>>>>> child finished" << std::endl;
+                std::cout << "                  >>>>>>>>>>>>>>>> child utility: " << child_value << ", min_util: " << min_util << endl;
+            }
             if (child_value < min_util) {
                 min_util = child_value;
             }
@@ -146,6 +183,7 @@ piece min_value(const State& state, int alpha, int beta) {
 		for (auto it = children.begin(); it != children.end(); ++it) {
 			delete *it;
 		}
+        if (VERBOSE) --verbose::tree_level;
         return (piece) min_util;
     }
 }
