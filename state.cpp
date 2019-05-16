@@ -183,6 +183,18 @@ bool State::insert_piece(piece pc, uint8_t col) {
 	return false;
 }
 
+bool State::remove_piece(const uint8_t row, const uint8_t col, const game_move new_last_move) {
+	// returns true if piece was removed,
+	// returns false if position is already empty
+	if (board[row][col] == piece::empty) {
+		return false;
+	}
+	board[row][col] = piece::empty;
+	num_empty_cells++;
+	last_move = new_last_move;
+	return true;
+}
+
 State::~State()
 {
 	//todo: implement if needed, or remove
