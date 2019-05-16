@@ -144,7 +144,7 @@ int main ()
 				cout<<endl<<endl<<endl;
 				cout<<"Enter Col number you want to insert in : ";
 				cin>>col;
-				check=(*(s)).make_move(player,col, s);
+				check=(*(s)).make_move(player,col-1, s);
 			}
 		}
 
