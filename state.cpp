@@ -50,24 +50,20 @@ State::State(const State &x, game_move &p)
 }
 bool State::make_move(piece pc, uint8_t col, State* s) const//ezay ast5dem el copy constructor gwa el fn????
 {
-  
 	bool ret = false;
-    (*(s)).last_move.col =col;
-    (*(s)).last_move._piece = pc;
-
 	for(int i=0; i<BOARD_ROWS; i++)
     {
         if ( (*(s)).board[i][col] == piece::empty)
         {
+            (*(s)).board[i][col] = pc;
             (*(s)).last_move.row = i;
-            (*(s)).board[i][col] = (*(s)).last_move._piece;
+			(*(s)).last_move.col = col;
+    		(*(s)).last_move._piece = pc;
 			(*(s)).num_empty_cells--;
 			ret=true;
 			break;
         }
     }
-
-
 	return ret;
 }
 
@@ -171,6 +167,20 @@ piece State::utility() const{
 		}
 	}
 	return piece::empty;
+}
+
+bool State::insert_piece(piece pc, uint8_t col) {
+	for (int i=0; i<BOARD_ROWS; i++) {
+        if ( board[i][col] == piece::empty) {
+            this->board[i][col] = pc;
+            this->last_move.row = i;
+			this->last_move.col =col;
+    		this->last_move._piece = pc;
+			this->num_empty_cells--;
+			return true;
+        }
+    }
+	return false;
 }
 
 State::~State()

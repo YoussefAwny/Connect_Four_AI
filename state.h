@@ -3,8 +3,8 @@
 #ifndef STATE_H
 #define STATE_H
 
-#define BOARD_ROWS 6
-#define BOARD_COLS 7
+#define BOARD_ROWS 4
+#define BOARD_COLS 4
 
 
 class State
@@ -21,6 +21,8 @@ public:
     ~State();
     piece utility() const;
     bool make_move(const piece pc, uint8_t col, State* s) const;
+    bool insert_piece(const piece pc, uint8_t col);
+    bool remove_piece(const uint8_t row, const uint8_t col, const game_move new_last_move);
     bool is_full() const
     {
         return num_empty_cells==0;
