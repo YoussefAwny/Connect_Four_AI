@@ -85,18 +85,6 @@ piece max_value(State& state, int alpha, int beta, State* max_state) {
     } else {
         // no winner, board is not full yet, there must exist
         // children to this state
-        // std::vector<State*> children;
-        // reserve the max possible capacity
-        // to improve performance when pushing new states
-        // children.reserve(BOARD_COLS);
-        // getChildren(state, children);
-        // since we already checked that this state is not a
-        // leaf node (terminal node), children vector should
-        // never be empty
-        // assert(children.size() != 0);
-        // if (VERBOSE && verbose::tree_level == 1) {
-        //     std::cout << "> num children of root: " << children.size() << std::endl;
-        // }
         int max_util = neg_inf;
         piece new_piece = state.last_move._piece == piece::us ? piece::them : piece::us;
         for (int i=0; i<BOARD_COLS; ++i) {
@@ -135,13 +123,6 @@ piece max_value(State& state, int alpha, int beta, State* max_state) {
         }
         // assert that we at least found one child
         assert(max_util != neg_inf);
-        // for (auto it = children.begin(); it != children.end(); ++it) {
-		// 	auto child_ptr = *it;
-        // }
-		//delete all children
-		// for (auto it = children.begin(); it != children.end(); ++it) {
-		// 	delete *it;
-		// }
         if (VERBOSE) --verbose::tree_level;
         return (piece) max_util;
     }
@@ -162,15 +143,6 @@ piece min_value(State& state, int alpha, int beta) {
     } else {
         // no winner, board is not full yet, there must exist
         // children to this state
-        // std::vector<State*> children;
-        // reserve the max possible capacity
-        // to improve performance when pushing new states
-        // children.reserve(BOARD_COLS);
-        // getChildren(state, children);
-        // since we already checked that this state is not a
-        // leaf node (terminal node), children vector should
-        // never be empty
-        // assert(children.size() != 0);
         int min_util = pos_inf;
         piece new_piece = state.last_move._piece == piece::us ? piece::them : piece::us;
         for (int i=0; i<BOARD_COLS; ++i) {
@@ -200,13 +172,6 @@ piece min_value(State& state, int alpha, int beta) {
         }
         // assert that we at least found one child
         assert(min_util != pos_inf);
-        // for (auto it = children.begin(); it != children.end(); ++it) {
-		// 	auto child_ptr = *it;
-        // }
-		// //delete all children
-		// for (auto it = children.begin(); it != children.end(); ++it) {
-		// 	delete *it;
-		// }
         if (VERBOSE) --verbose::tree_level;
         return (piece) min_util;
     }
