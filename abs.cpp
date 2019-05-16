@@ -94,7 +94,7 @@ piece max_value(const State& state, int alpha, int beta, State* max_state) {
             }
             // cutoff - stop looking in the other children if max_util
             // is already out of acceptable range [alpha, beta]
-            if (max_util > beta) {
+            if (max_util >= beta) {
                 break;
             }
             alpha = max_util > alpha ? max_util : alpha;
@@ -137,7 +137,7 @@ piece min_value(const State& state, int alpha, int beta) {
             }
             // cutoff - stop looking in the other children if min_util
             // is already out of acceptable range [alpha, beta]
-            if (min_util < alpha) {
+            if (min_util <= alpha) {
 				break;
             }
             beta = min_util < beta ? min_util : beta;
